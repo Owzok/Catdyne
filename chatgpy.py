@@ -16,11 +16,17 @@ screen.fill(background_color)
 # Set the title of the window
 pygame.display.set_caption("Undyne")
 
+font = pygame.font.SysFont(None, 30)
+
 # Set the font for displaying text
 font = pygame.font.SysFont(None, 30)
 
+score = 0
+
 # Set the square size
 square_size = 64
+
+direction_input = ""
 
 # Set the initial speed
 speed = 1
@@ -38,14 +44,56 @@ cat = pygame.transform.scale(cat, (128, 128))
 box = pygame.image.load("Imgs/box.png").convert_alpha()
 box = pygame.transform.scale(box, (128, 128))
 
+left_barrier = pygame.image.load("Imgs/leftbar.png").convert_alpha()
+left_barrier = pygame.transform.scale(left_barrier, (128,128))
+
+right_barrier = pygame.image.load("Imgs/rightbar.png").convert_alpha()
+right_barrier = pygame.transform.scale(right_barrier, (128,128))
+
+upper_barrier = pygame.image.load("Imgs/upperbar.png").convert_alpha()
+upper_barrier = pygame.transform.scale(upper_barrier, (128,128))
+
+down_barrier = pygame.image.load("Imgs/downbar.png").convert_alpha()
+down_barrier = pygame.transform.scale(down_barrier, (128,128))
+
+heart0 = pygame.image.load("Imgs/heart0.png").convert_alpha()
+heart0 = pygame.transform.scale(heart0, (128,128))
+heart1 = pygame.image.load("Imgs/heart1.png").convert_alpha()
+heart1 = pygame.transform.scale(heart1, (128,128))
+heart2 = pygame.image.load("Imgs/heart2.png").convert_alpha()
+heart2 = pygame.transform.scale(heart2, (128,128))
+heart3 = pygame.image.load("Imgs/heart3.png").convert_alpha()
+heart3 = pygame.transform.scale(heart3, (128,128))
+
+lives = 3
 
 # Create the center square
 center_square = pygame.Rect(screen_width/2 - square_size, screen_height/2 - square_size, 100, 100)
+
+def barrier_side(spawn):
+    if direction_input == "left":
+        screen.blit(left_barrier, spawn)
+    elif direction_input == "right":
+        screen.blit(right_barrier, spawn)
+    elif direction_input == "up":
+        screen.blit(upper_barrier, spawn)
+    elif direction_input == "down":
+        screen.blit(down_barrier, spawn)
 
 # Game loop
 while True:
     # Handle events
     for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                direction_input = "left"
+            if event.key == pygame.K_RIGHT:
+                direction_input = "right"
+            if event.key == pygame.K_UP:
+                direction_input = "up"
+            if event.key == pygame.K_DOWN:
+                direction_input = "down"
+            print(direction_input)
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
@@ -101,7 +149,11 @@ while True:
 
         # Check for collision with the center square
         if square_rect.colliderect(center_square):
-            print(dx, dy)
+            if (dx > 0 and direction_input != "right") or (dx < 0 and direction_input != "left") or (dy > 0 and direction_input != "down") or (dy < 0 and direction_input != "up"):
+                score += 1
+                print("Score:", score)
+            else:
+                lives-=1
             squares.remove(square)
 
         # Remove the square if it goes off screen
@@ -121,9 +173,23 @@ while True:
         square_image = pygame.transform.scale(square_image, (square_size, square_size))
         screen.blit(square_image, square_rect)
 
+    score_text = font.render("Score: " + str(score), True, (255, 255, 255))
+    screen.blit(score_text, (10, 10))
+
+
+    if lives == 3:
+        screen.blit(heart0, (screen_width/2-64, screen_height/2-64))
+    elif lives == 2:
+        screen.blit(heart1, (screen_width/2-64, screen_height/2-64))
+    elif lives == 1:
+        screen.blit(heart2, (screen_width/2-64, screen_height/2-64))
+    elif lives == 0:
+        screen.blit(heart3, (screen_width/2-64, screen_height/2-64))
+
     # Draw the center square
     screen.blit(box, center_square)
     screen.blit(cat, (screen_width/2-64, 100))
+    barrier_side(center_square)
 
     # Update the display
     pygame.display.update()
