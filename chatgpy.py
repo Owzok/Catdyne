@@ -14,7 +14,7 @@ background_color = (0, 0, 0)
 screen.fill(background_color)
 
 # Set the title of the window
-pygame.display.set_caption("Undyne")
+pygame.display.set_caption("Catdyne")
 
 font = pygame.font.SysFont(None, 30)
 
