@@ -57,13 +57,13 @@ class Catdyne:
 
     def barrier_side(self, spawn):
         if self.direction_input == "left":
-            screen.blit(left_barrier, spawn)
+            self.screen.blit(self.left_barrier, spawn)
         elif self.direction_input == "right":
-            screen.blit(right_barrier, spawn)
+            self.screen.blit(self.right_barrier, spawn)
         elif self.direction_input == "up":
-            screen.blit(upper_barrier, spawn)
+            self.screen.blit(self.upper_barrier, spawn)
         elif self.direction_input == "down":
-            screen.blit(down_barrier, spawn)
+            self.screen.blit(self.down_barrier, spawn)
 
     def increase_difficulty(self):
         if self.current_time - self.last_speed_increase_time > 15000:
@@ -151,13 +151,13 @@ class Catdyne:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    direction_input = "left"
+                    self.direction_input = "left"
                 if event.key == pygame.K_RIGHT:
-                    direction_input = "right"
+                    self.direction_input = "right"
                 if event.key == pygame.K_UP:
-                    direction_input = "up"
+                    self.direction_input = "up"
                 if event.key == pygame.K_DOWN:
-                    direction_input = "down"
+                    self.direction_input = "down"
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
