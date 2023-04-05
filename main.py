@@ -28,6 +28,16 @@ class Catdyne:
 
         self.loadimages()
 
+        ### sound
+
+        pygame.mixer.init()
+        music = pygame.mixer.Channel(0)
+        self.sfx = pygame.mixer.Channel(1)
+
+        undyne = pygame.mixer.Sound('undyne.mp3')
+        music.play(undyne, -1) # -1 for looping
+
+
     def loadimages(self):
         self.cat = pygame.image.load("Imgs/cat.png").convert_alpha()
         self.cat = pygame.transform.scale(self.cat, (128, 128))
@@ -133,7 +143,14 @@ class Catdyne:
             if square_rect.colliderect(self.center_square): 
                 if (dx > 0 and self.direction_input != "right") or (dx < 0 and self.direction_input != "left") or (dy > 0 and self.direction_input != "down") or (dy < 0 and self.direction_input != "up"):
                     self.score += 1
-                else: self.lives-=1
+                    ping = pygame.mixer.Sound('ping sfx.mp3')
+                    self.sfx.play(ping)
+
+                else: 
+                    self.lives-=1
+                    dmg = pygame.mixer.Sound('damage sfx.mp3')
+                    self.sfx.play(dmg)
+
                 self.squares.remove(square)
                                                 # Remove the square if it goes off screen
             if square_rect.left > screen_width or square_rect.right < 0 or square_rect.top > screen_height or square_rect.bottom < 0:
